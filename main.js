@@ -1,5 +1,11 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import GUI from "https://cdn.jsdelivr.net/npm/lil-gui@0.18/+esm";
+
+/**
+ * UIデバッグ
+ */
+const gui = new GUI();
 
 window.addEventListener("load", init);
 
@@ -50,9 +56,21 @@ function init() {
   // マウス操作
   const Controls = new OrbitControls(camera, renderer.domElement);
 
-  // ポイント光源のアニメーション
+  const boxGeometry = new THREE.BoxGeometry(50, 50, 50);
+  const boxMaterial = new THREE.MeshNormalMaterial();
+  const cube = new THREE.Mesh(boxGeometry, boxMaterial);
+  cube.position.set(100, -30, 100);
+  scene.add(cube);
+
+  // デバッグ
+  gui.add(cube.position, "x");
+
+  // アニメーション
   function animate() {
-    // ポジションを動的に指定
+    // ボックスジオメトリ回転角度を更新する
+    cube.rotation.x += 0.01;
+    cube.rotation.y += 0.01;
+    // 球体ジオメトリのpontLightポジションを動的に指定
     pointLight.position.set(
       200 * Math.sin(Date.now() / 500),
       200 * Math.sin(Date.now() / 1000),
@@ -74,4 +92,6 @@ function init() {
 
   window.addEventListener("resize", onWindowResize);
   animate();
+
+  // renderer.render(scene, camera);
 }
